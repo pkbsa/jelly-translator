@@ -1,3 +1,5 @@
+document.getElementById("downloadTextLink").href = "data:text/plain;charset=utf-8," + encodeURIComponent("Please Translate First");
+
 let timer;
   let isTyping = false;
   let inputText = ""; // Declare inputText in a wider scope
@@ -26,6 +28,8 @@ function translateText() {
           console.log(data);
           if (data != "Unknown") {
             $("#translated_text").val(data);
+            document.getElementById("downloadTextLink").href = "data:text/plain;charset=utf-8," + encodeURIComponent(data);
+
           }
         }
       );
@@ -134,25 +138,25 @@ $(document).ready(function () {
 
 });
 
-
-
-// Function to handle the download
 function downloadText() {
-  var selectedOption = $("#target_lang option:selected").text();
-  var textToDownload = "Selected Text: " + selectedOption;
-
+  var textToDownload = $("#translated_text").text();  // Get the value of the textarea
+  console.log(textToDownload)
   // Create a Blob with the text content
   var blob = new Blob([textToDownload], { type: "text/plain" });
 
   // Create a URL for the Blob
   var url = URL.createObjectURL(blob);
 
-  // Set the href and click the link to trigger the download
-  $("#downloadTextLink").attr("href", url).show();
+  // Create a temporary link, set attributes, trigger click, and remove the link
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = "translated_result.txt";  // Set the filename
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
-// Trigger the download when the target_lang select changes
-$("#target_lang").change(downloadText);
+document.getElementById("downloadTextLink").href = "data:text/plain;charset=utf-8," + encodeURIComponent(translatedText);
+$("#downloadTextLink").attr("href", url).show()[0].click();
 
 function copyToClipboard() {
   var textToCopy = $("#translated_text").val();
